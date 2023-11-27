@@ -1,22 +1,9 @@
 {
   "name": "dcs-fiddle-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "DCS Fiddle Server Written with tslua-dcs and TypescriptToLua",
   "scripts": {
-    "build": "rimraf dist && tstl -p tsconfig.tstl.json",
-    "dev": "cd dist && lua test-app.lua",
-    "dev:watch": "nodemon",
-    "build:docs": "typedoc",
-    "test": "concurrently -k -s first \"npm run dev > .test-app.log\" \"vitest run\""
-  },
-  "nodemonConfig": {
-    "verbose": true,
-    "watch": [
-      "dist"
-    ],
-    "ext": "lua",
-    "exec": "npm run dev"
+    "build": "rimraf dist && tstl -p tsconfig.tstl.json"
   },
   "keywords": [],
   "author": "",
@@ -27,9 +14,7 @@
     "@flying-dice/tslua-http-api": "^0.5.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.4.0",
     "lua-types": "^2.13.1",
-    "nodemon": "^3.0.1",
     "rimraf": "^5.0.5",
     "typescript": "^5.2.2",
     "typescript-to-lua": "^1.22.0",
