@@ -1,10 +1,10 @@
 {
-	"$schema": "https://raw.githubusercontent.com/TypeScriptToLua/TypeScriptToLua/master/tsconfig-schema.json",
-	"extends": "./tsconfig.json",
-	"tstl": {
-		"sourceMapTraceback": true,
-		"luaBundleEntry": "src/index.ts",
-		"luaBundle": "dcs-fiddle.lua",
-		"noResolvePaths": ["socket"]
-	}
+  "$schema": "https://raw.githubusercontent.com/TypeScriptToLua/TypeScriptToLua/master/tsconfig-schema.json",
+  "extends": "./tsconfig.json",
+  "tstl": {
+    "sourceMapTraceback": true,
+    "luaBundleEntry": "src/index.ts",
+    "luaBundle": "dcs-fiddle.lua",
+    "noResolvePaths": ["socket"]
+  }
 }

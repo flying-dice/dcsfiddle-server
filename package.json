@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "lua-types": "^2.13.1",
+    "prettier": "^3.1.0",
     "rimraf": "^5.0.5",
     "typescript": "^5.2.2",
     "typescript-to-lua": "^1.22.0",

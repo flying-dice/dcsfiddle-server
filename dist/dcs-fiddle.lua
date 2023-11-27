@@ -2652,6 +2652,11 @@ return {
   __TS__UsingAsync = __TS__UsingAsync
 }
  end,
+["openapi.schema"] = function(...) 
+local ____lualib = require("lualib_bundle")
+local __TS__SourceMapTraceBack = ____lualib.__TS__SourceMapTraceBack
+return {["$schema"] = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json", openapi = "3.0.3", info = {title = "DCS Fiddle", description = "DCS Fiddle HTTP Server for executing remote commands", version = "1.0.0"}, paths = {["/health"] = {get = {summary = "Health check", description = "Health check endpoint", responses = {["200"] = {description = "OK", content = {["application/json"] = {schema = {type = "object", properties = {status = {type = "string", example = "OK"}, _APP_VERSION = {type = "string", example = "2.9.1.48335"}, _ARCHITECTURE = {type = "string", example = "x86_64"}, _VERSION = {type = "string", example = "Lua 5.1"}}}}}}}}}, ["/loadstring"] = {post = {summary = "Load a string", description = "Load a string and execute it in the DCS environment", requestBody = {content = {["text/plain"] = {schema = {type = "string", example = "cmV0dXJuIGVudi5taXNzaW9uLnRoZWF0cmU="}}}}, responses = {["200"] = {description = "OK", content = {["application/json"] = {schema = {type = "object"}}}}}}}}}
+ end,
 ["app"] = function(...) 
 local ____lualib = require("lualib_bundle")
 local __TS__New = ____lualib.__TS__New
@@ -2660,18 +2665,57 @@ local ____exports = {}
 local ____tslua_2Dhttp_2Dapi = require("lua_modules.@flying-dice.tslua-http-api.dist.index")
 local Application = ____tslua_2Dhttp_2Dapi.Application
 local base64 = require("lua_modules.@flying-dice.tslua-base64.index")
+local spec = require("openapi.schema")
+_G.print = env.info
 ____exports.app = __TS__New(Application, "127.0.0.1", 16658)
+____exports.app:use(
+    "/.*",
+    function(____, req, res, next)
+        res.res.headers["Access-Control-Allow-Origin"] = "*"
+        next(nil)
+    end
+)
+____exports.app:get(
+    "/health",
+    function(____, req, res)
+        res:status(200):json({status = "OK", _VERSION = _VERSION, _APP_VERSION = _APP_VERSION, _ARCHITECTURE = _ARCHITECTURE})
+    end
+)
+____exports.app:get(
+    "/v3/api-docs",
+    function(____, req, res)
+        res:json(spec)
+    end
+)
 ____exports.app:post(
-    "/dostring_in",
+    "/loadstring",
     function(____, req, res)
         if type(req.body) ~= "string" then
             res:status(400):json({error = "invalid body, should be base64 encoded lua string"})
             return
         end
         local str = base64.decode(req.body)
-        local result = net.dostring_in(str)
-        res:json(result)
+        local result = loadstring(str)
+        res:json(result and result())
     end
+)
+timer.scheduleFunction(
+    function()
+        do
+            local function ____catch(e)
+                env.error("Error accepting client: " .. tostring(e))
+            end
+            local ____try, ____hasReturned = pcall(function()
+                ____exports.app:acceptNextClient()
+            end)
+            if not ____try then
+                ____catch(____hasReturned)
+            end
+        end
+        return timer.getTime() + 0.1
+    end,
+    nil,
+    timer.getTime() + 0.1
 )
 return ____exports
  end,
@@ -4037,5 +4081,5 @@ return ____exports
  end,
 }
 local __TS__SourceMapTraceBack = require("lualib_bundle").__TS__SourceMapTraceBack
-__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["2660"] = {line = 1, file = "app.ts"},["2661"] = {line = 1, file = "app.ts"},["2662"] = {line = 2, file = "app.ts"},["2663"] = {line = 4, file = "app.ts"},["2664"] = {line = 6, file = "app.ts"},["2665"] = {line = 6, file = "app.ts"},["2666"] = {line = 6, file = "app.ts"},["2667"] = {line = 7, file = "app.ts"},["2668"] = {line = 8, file = "app.ts"},["2671"] = {line = 12, file = "app.ts"},["2672"] = {line = 13, file = "app.ts"},["2673"] = {line = 14, file = "app.ts"},["2674"] = {line = 6, file = "app.ts"},["2675"] = {line = 6, file = "app.ts"},["4029"] = {line = 1, file = "index.ts"}});
+__TS__SourceMapTraceBack(debug.getinfo(1).short_src, {["2658"] = {line = 1, file = "openapi.schema.json"},["2665"] = {line = 3, file = "app.ts"},["2666"] = {line = 3, file = "app.ts"},["2667"] = {line = 4, file = "app.ts"},["2668"] = {line = 5, file = "app.ts"},["2669"] = {line = 1, file = "app.ts"},["2670"] = {line = 12, file = "app.ts"},["2671"] = {line = 14, file = "app.ts"},["2672"] = {line = 14, file = "app.ts"},["2673"] = {line = 14, file = "app.ts"},["2674"] = {line = 15, file = "app.ts"},["2675"] = {line = 16, file = "app.ts"},["2676"] = {line = 14, file = "app.ts"},["2677"] = {line = 14, file = "app.ts"},["2678"] = {line = 19, file = "app.ts"},["2679"] = {line = 19, file = "app.ts"},["2680"] = {line = 19, file = "app.ts"},["2681"] = {line = 20, file = "app.ts"},["2682"] = {line = 19, file = "app.ts"},["2683"] = {line = 19, file = "app.ts"},["2684"] = {line = 23, file = "app.ts"},["2685"] = {line = 23, file = "app.ts"},["2686"] = {line = 23, file = "app.ts"},["2687"] = {line = 24, file = "app.ts"},["2688"] = {line = 23, file = "app.ts"},["2689"] = {line = 23, file = "app.ts"},["2690"] = {line = 27, file = "app.ts"},["2691"] = {line = 27, file = "app.ts"},["2692"] = {line = 27, file = "app.ts"},["2693"] = {line = 28, file = "app.ts"},["2694"] = {line = 29, file = "app.ts"},["2697"] = {line = 35, file = "app.ts"},["2698"] = {line = 36, file = "app.ts"},["2699"] = {line = 37, file = "app.ts"},["2700"] = {line = 27, file = "app.ts"},["2701"] = {line = 27, file = "app.ts"},["2702"] = {line = 40, file = "app.ts"},["2703"] = {line = 41, file = "app.ts"},["2706"] = {line = 45, file = "app.ts"},["2709"] = {line = 43, file = "app.ts"},["2715"] = {line = 48, file = "app.ts"},["2716"] = {line = 41, file = "app.ts"},["2717"] = {line = 50, file = "app.ts"},["2718"] = {line = 51, file = "app.ts"},["2719"] = {line = 40, file = "app.ts"},["4073"] = {line = 1, file = "index.ts"}});
 return require("index", ...)

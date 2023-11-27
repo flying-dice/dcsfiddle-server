@@ -1,0 +1,66 @@
+{
+  "$schema": "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json",
+  "openapi": "3.0.3",
+  "info": {
+    "title": "DCS Fiddle",
+    "description": "DCS Fiddle HTTP Server for executing remote commands",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "description": "Health check endpoint",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "OK" },
+                    "_APP_VERSION": {
+                      "type": "string",
+                      "example": "2.9.1.48335"
+                    },
+                    "_ARCHITECTURE": { "type": "string", "example": "x86_64" },
+                    "_VERSION": { "type": "string", "example": "Lua 5.1" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/loadstring": {
+      "post": {
+        "summary": "Load a string",
+        "description": "Load a string and execute it in the DCS environment",
+        "requestBody": {
+          "content": {
+            "text/plain": {
+              "schema": {
+                "type": "string",
+                "example": "cmV0dXJuIGVudi5taXNzaW9uLnRoZWF0cmU="
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
