@@ -1,6 +1,7 @@
 {
   "name": "dcs-fiddle-server",
   "version": "0.1.0",
+  "private": true,
   "author": "Flying Dice",
   "license": "ISC",
   "description": "DCS Fiddle Server Written with tslua-dcs and TypescriptToLua",
