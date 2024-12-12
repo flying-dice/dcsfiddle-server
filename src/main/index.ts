@@ -14,10 +14,12 @@ DCS?.setUserCallbacks({
   onSimulationStart() {
     logger.info("Simulation Started");
 
+    logger.info("Starting DCS Fiddle Mission Server");
     const fiddleFile = `${lfs.writedir()}\\Scripts\\dcs-fiddle-mission.lua`;
+    const [result] = string.gsub(fiddleFile, "\\", "/");
     const fiddleFileCommand = string.format(
       `a_do_script("dofile('%s')")`,
-      string.gsub(fiddleFile, "\\", "/"),
+      result,
     );
     log.info(`Loading fiddle mission from ${fiddleFileCommand}`);
 
