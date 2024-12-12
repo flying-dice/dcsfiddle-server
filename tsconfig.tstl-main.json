@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/TypeScriptToLua/TypeScriptToLua/master/tsconfig-schema.json",
+  "extends": "./tsconfig.main.json",
+  "tstl": {
+    "sourceMapTraceback": true,
+    "luaBundleEntry": "src/main/index.ts",
+    "luaBundle": "dcs-fiddle-main.lua",
+    "noResolvePaths": ["socket"],
+    "luaLibImport": "require-minimal",
+    "luaTarget": "5.1"
+  }
+}

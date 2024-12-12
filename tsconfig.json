@@ -1,13 +1,11 @@
 {
-  "compilerOptions": {
-    "target": "ES6",
-    "lib": ["ES6"],
-    "moduleResolution": "Node",
-    "types": ["lua-types/5.1", "@flying-dice/tslua-dcs-types"],
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "outDir": "dist",
-    "resolveJsonModule": true
-  }
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.main.json"
+    },
+    {
+      "path": "./tsconfig.mission.json"
+    }
+  ]
 }

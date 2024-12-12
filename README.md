@@ -1,54 +1,192 @@
-# DCS Fiddle HTTP Server written using tslua-dcs and TypescriptToLua
+[![Join Discord](https://img.shields.io/badge/Join-blue?logo=discord&label=Discord)](https://discord.gg/bT7BEHn5RD)
+[![Discord](https://img.shields.io/discord/738118932937834566?logo=discord&label=Discord)](https://discord.com/channels/738118932937834566/1178991295260278785)
+[![tslua-codebot](https://img.shields.io/badge/CodeBot-tslua%20dcs-blue?logo=openai)](https://chat.openai.com/g/g-6643nUbup-tslua-dcs-codebot)
+[![patreon](https://img.shields.io/badge/Patreon-flyingdice-red?logo=patreon)](https://patreon.com/flyingdice)
 
-This repo contains a HTTP server that can be used to execute LUA scripts in DCS World.
+![logo](index.png)
 
-Its main purpose is to allow the execution of LUA scripts using https://develop.dcsfiddle.pages.dev/ but it can be used for other purposes.
+# ⚛️ DCS Fiddle HTTP Server
 
-This is a minimal example of how to use the [tslua-dcs](https://github.com/flying-dice/tslua-dcs) to author a LUA script that can be executed in DCS World using Typescript.
+This repository contains two HTTP servers designed to execute LUA scripts in DCS World, leveraging [tslua-dcs](https://tslua-dcs.pages.dev/) and [TypeScriptToLua](https://typescripttolua.github.io/). While primarily intended for integration with [DCS Fiddle](https://dcsfiddle.pages.dev/), these servers can also be used for other purposes.
 
-## Usage
+## ✨ Features
 
-Download the lua bundle from `dist/dcs-fiddle.lua` and create a new mission in the DCS Mission Editor. Add a trigger with the following settings:
+- **Execute LUA scripts:** Easily run LUA scripts in DCS World.
+- **RESTful API:** Interact via POST requests for seamless integration with tools and scripts.
+- **Swagger Integration:** View and test API endpoints with OpenAPI specifications.
 
-![img_1.png](docs/img_1.png)
+## 🔒 Prerequisites
 
-This will start the HTTP server on a loop on port 16658 listening on 127.0.0.1.
+To enable script execution, update your `MissionScripting.lua` file to allow access to `require` and `package` modules. Additionally, configure the LuaSocket package path as follows:
 
-Open the HTTP Server OpenAPI spec at http://127.0.0.1:16658/v3/api-docs using a swagger editor i.e. https://petstore.swagger.io/
+### 🔧 Updating `MissionScripting.lua`
 
-Or import the spec into Postman.
+Replace your `MissionScripting.lua` file content with the following code:
 
-You will see the HTTP server exposes 2 endpoints, a health endpoint:
+```lua
+-- Initialization script for the Mission lua Environment (SSE)
 
-![img.png](docs/img.png)
+dofile('Scripts/ScriptingSystem.lua')
 
-And a loadstring endpoint:
+-- Sanitize Mission Scripting environment
+-- WARNING: The following configuration makes some functions available, potentially exposing risks.
+-- Proceed with caution if using downloaded missions.
 
-![img.png](docs/img_2.png)
+local function sanitizeModule(name)
+    _G[name] = nil
+    package.loaded[name] = nil
+end
 
-The Body of the post request should contain a LUA script that MUST return a value, it will be loaded and executed and the response will be returned
-as a JSON body.
+do
+    sanitizeModule('os')
+    sanitizeModule('io')
+    sanitizeModule('lfs')
+    -- _G['require'] = nil
+    _G['loadlib'] = nil
+    -- _G['package'] = nil
+end
 
-For example the following request will return the string "Caucasus":
+package.path = package.path .. ";.\\LuaSocket\\?.lua"
+package.cpath = package.cpath .. ";.\\LuaSocket\\?.dll"
+```
+
+## ⚡️ Installation
+
+Download the latest release from the [GitHub repository](https://github.com/flying-dice/dcsfiddle-server/releases).
+
+- Add the `dcs-fiddle-main.lua` file to your DCS World `%USERPROFILE%\Saved Games\DCS\Scripts\Hooks` folder.
+- Add the `dcs-fiddle-mission.lua` file to your DCS World `%USERPROFILE%\Saved Games\DCS\Scripts` folder.
+
+## 🚀 Usage
+
+When DCS starts it will load the `dcs-fiddle-main.lua` script, which will start the GUI HTTP server on port `12081`. 
 
 ```shell
-curl --location --request POST 'http://127.0.0.1:16658/loadstring' \
---header 'Content-Type: text/plain' \
---data-raw 'cmV0dXJuIGVudi5taXNzaW9uLnRoZWF0cmU='
+curl -X GET --location "http://127.0.0.1:12081/health"
 ```
+
+If the server is running, you will receive the following response:
+```json
+{"_APP_VERSION":"2.9.10.3948","version":"0.1.0","environment":"GUI","status":"OK","_VERSION":"Lua 5.1","_ARCHITECTURE":"x86_64"}
+```
+
+When a mission is loaded, the `dcs-fiddle-mission.lua` script will start the Mission HTTP server on port `12080`.
+
+```shell
+curl -X GET --location "http://127.0.0.1:12080/health"
+```
+
+If the server is running, you will receive the following response:
+
+```json
+{"_APP_VERSION":"2.9.10.3948","version":"0.1.0","environment":"MISSION","status":"OK","_VERSION":"Lua 5.1","_ARCHITECTURE":"x86_64"}
+```
+
+### 🔄 API Endpoints
+
+1. **Health Check:**
+    - Endpoint: `GET /health`
+    - Use this endpoint to check if the server is running.
+
+2. **Execute LUA Script:**
+    - Endpoint: `POST /loadstring`
+    - Accepts a base64-encoded LUA script in the request body and executes it.
+
+### 📃 Example Requests
+
+#### Execute LUA Script
+
+Send a POST request to execute a LUA script. The script must be encoded in base64.
+
+**Request:**
+
+```bash
+curl -X POST --location "http://127.0.0.1:12081/loadstring" \
+    -H "Content-Type: text/plain" \
+    -d 'cmV0dXJuICJVUCI='
+```
+
+**Response:**
+
+The server returns the result of the LUA script in JSON format:
 
 ```json
 "Caucasus"
 ```
 
-The following request will return the coalition side table:
+#### Example 2: Get Coalition Side Table
 
-```shell
-curl --location --request POST 'http://127.0.0.1:16658/loadstring' \
+**Request:**
+
+```bash
+curl --location --request POST 'http://127.0.0.1:12080/loadstring' \
 --header 'Content-Type: text/plain' \
 --data-raw 'cmV0dXJuIGNvYWxpdGlvbi5zaWRl'
 ```
 
+**Response:**
+
 ```json
 { "NEUTRAL": 0, "BLUE": 2, "RED": 1 }
 ```
+
+### 📊 OpenAPI Documentation
+
+View the API documentation in a Swagger editor, such as [Swagger Petstore](https://petstore.swagger.io/), by navigating to:
+
+- **Main:** https://petstore.swagger.io/?url=http://127.0.0.1:12081/v3/api-docs
+- **Mission:** https://petstore.swagger.io/?url=http://127.0.0.1:12080/v3/api-docs
+
+## 🔧 Local Development
+
+This project is authored using [tslua-dcs](https://tslua-dcs.pages.dev/), enabling the development of LUA scripts in TypeScript.
+
+### ⏳ Hot Reloading for Development
+
+To test the project locally without restarting DCS:
+
+1. Install the [DCS Hot Loader](https://github.com/flying-dice/dcs-hot-loader).
+2. Use the following commands for rapid iteration:
+
+```bash
+npm run build && npm run deploy
+```
+
+## 📃 Available Scripts
+
+The following `package.json` scripts are available for this project:
+
+- **`build`**: Cleans the `dist` folder and builds both main and mission files.
+  ```bash
+  npm run build
+  ```
+- **`build:main`**: Builds the main server script using `tsconfig.tstl-main.json`.
+  ```bash
+  npm run build:main
+  ```
+- **`build:mission`**: Builds the mission script using `tsconfig.tstl-mission.json`.
+  ```bash
+  npm run build:mission
+  ```
+- **`deploy`**: Deploys both the main server and mission scripts.
+  ```bash
+  npm run deploy
+  ```
+- **`deploy:main`**: Deploys the main server script.
+  ```bash
+  npm run deploy:main
+  ```
+- **`deploy:mission`**: Deploys the mission script.
+  ```bash
+  npm run deploy:mission
+  ```
+
+## ⚠️ Troubleshooting
+
+- **Server not starting:** Ensure all dependencies are installed and the required ports are not in use, ensure the MissionScripting.lua file is correctly configured.
+- **Script execution errors:** Verify that the LUA script is properly encoded in base64 and adheres to DCS scripting requirements.
+
+## 📜 License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+

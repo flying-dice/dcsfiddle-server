@@ -1,24 +1,64 @@
 {
   "name": "dcs-fiddle-server",
-  "version": "1.0.0",
+  "version": "0.1.0",
+  "author": "Flying Dice",
+  "license": "ISC",
   "description": "DCS Fiddle Server Written with tslua-dcs and TypescriptToLua",
   "scripts": {
-    "build": "rimraf dist && tstl -p tsconfig.tstl.json"
+    "build": "rimraf dist && npm run build:main && npm run build:mission",
+    "build:main": "tstl -p tsconfig.tstl-main.json",
+    "build:mission": "tstl -p tsconfig.tstl-mission.json",
+    "deploy": "npm run deploy:main && npm run deploy:mission",
+    "deploy:main": "node scripts/deploy-main.js",
+    "deploy:mission": "node scripts/deploy-mission.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@flying-dice/tslua-base64": "^0.5.0",
-    "@flying-dice/tslua-dcs-types": "^0.5.0",
-    "@flying-dice/tslua-http-api": "^0.5.0"
+    "@flying-dice/tslua-base64": "^0.32.7",
+    "@flying-dice/tslua-common": "^0.32.7",
+    "@flying-dice/tslua-dcs-gui-types": "^0.32.7",
+    "@flying-dice/tslua-dcs-mission-types": "^0.32.7",
+    "@flying-dice/tslua-http-api": "^0.32.7"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.0",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.1",
+    "semantic-release": "^24.2.0",
+    "axios": "^1.7.9",
     "lua-types": "^2.13.1",
-    "prettier": "^3.1.0",
-    "rimraf": "^5.0.5",
-    "typescript": "^5.2.2",
-    "typescript-to-lua": "^1.22.0",
-    "vitest": "^0.34.6"
+    "npm-check-updates": "^17.1.11",
+    "prettier": "^3.4.2",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.2",
+    "typescript-to-lua": "^1.28.1",
+    "vitest": "^2.1.8"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/git",
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "npm run build"
+        }
+      ],
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            "dist/*.lua"
+          ]
+        }
+      ]
+    ]
   }
 }

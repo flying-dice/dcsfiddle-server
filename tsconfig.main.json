@@ -1,0 +1,19 @@
+{
+  "include": ["src/main/**/*", "src/common/**/*"],
+  "compilerOptions": {
+    "target": "ES6",
+    "lib": ["ES6"],
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "useUnknownInCatchVariables": false,
+    "outDir": "dist",
+    "types": [
+      "lua-types/5.1",
+      "@typescript-to-lua/language-extensions",
+      "@flying-dice/tslua-dcs-gui-types"
+    ]
+  }
+}

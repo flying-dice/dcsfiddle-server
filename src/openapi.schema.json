@@ -43,11 +43,42 @@
             "text/plain": {
               "schema": {
                 "type": "string",
-                "example": "cmV0dXJuIGVudi5taXNzaW9uLnRoZWF0cmU="
+                "example": "cmV0dXJuICJVUCI="
               }
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{script}": {
+      "get": {
+        "deprecated": true,
+        "summary": "Load a string",
+        "description": "Load a string and execute it in the DCS environment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "script",
+            "required": true,
+            "example": "cmV0dXJuICJVUCI=",
+            "schema": {
+              "format": "base64",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",

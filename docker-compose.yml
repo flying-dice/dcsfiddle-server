@@ -1,0 +1,13 @@
+services:
+  swagger:
+    image: swaggerapi/swagger-ui
+    restart: no
+    ports:
+        - 8080:8080
+    environment:
+      DISPLAY_OPERATION_ID: 'true'
+      URLS: |
+        [
+          {"name":"DCS Fiddle Mission Server (12080)","url":"http://127.0.0.1:12080/v3/api-docs"},
+          {"name":"DCS Fiddle GUI Server (12081)","url":"http://127.0.0.1:12081/v3/api-docs"},
+        ]

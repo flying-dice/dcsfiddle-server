@@ -1,0 +1,14 @@
+### POST request to GUI Server
+POST http://127.0.0.1:12081/loadstring
+Content-Type: text/plain
+
+cmV0dXJuICJVUCI=
+
+### POST request to GUI Server
+POST http://127.0.0.1:12081/loadstring?env=mission
+Content-Type: text/plain
+
+cmV0dXJuICJVUCI=
+
+###
+
