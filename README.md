@@ -57,6 +57,8 @@ Download the latest release from the [GitHub repository](https://github.com/flyi
 - Add the `dcs-fiddle-main.lua` file to your DCS World `%USERPROFILE%\Saved Games\DCS\Scripts\Hooks` folder.
 - Add the `dcs-fiddle-mission.lua` file to your DCS World `%USERPROFILE%\Saved Games\DCS\Scripts` folder.
 
+[![dropzone](https://dcs-dropzone-registry-viewer.pages.dev/download.svg)](https://dcs-dropzone-registry-viewer.pages.dev/#/dcs-fiddle)
+
 ## 🚀 Usage
 
 When DCS starts it will load the `dcs-fiddle-main.lua` script, which will start the GUI HTTP server on port `12081`. 
