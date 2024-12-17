@@ -8,17 +8,17 @@
   "scripts": {
     "build": "rimraf dist && npm run build:main && npm run build:mission",
     "build:main": "tstl -p tsconfig.tstl-main.json",
-    "build:mission": "tstl -p tsconfig.tstl-mission.json",
+    "build:mission": "tstl -p tsconfig.tstl-mission.json && node scripts/prepend-package.js",
     "deploy": "npm run deploy:main && npm run deploy:mission",
     "deploy:main": "node scripts/deploy-main.js",
     "deploy:mission": "node scripts/deploy-mission.js"
   },
   "dependencies": {
-    "@flying-dice/tslua-base64": "^0.32.11",
-    "@flying-dice/tslua-common": "^0.32.11",
-    "@flying-dice/tslua-dcs-gui-types": "^0.32.11",
-    "@flying-dice/tslua-dcs-mission-types": "^0.32.11",
-    "@flying-dice/tslua-http-api": "^0.32.11"
+    "@flying-dice/tslua-base64": "^0.32.12",
+    "@flying-dice/tslua-common": "^0.32.12",
+    "@flying-dice/tslua-dcs-gui-types": "^0.32.12",
+    "@flying-dice/tslua-dcs-mission-types": "^0.32.12",
+    "@flying-dice/tslua-http-api": "^0.32.12"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",

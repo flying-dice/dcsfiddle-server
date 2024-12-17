@@ -1,2 +1,3 @@
 /node_modules/
 /tsconfig.mission.json
+/scripts/prepend-package.js
